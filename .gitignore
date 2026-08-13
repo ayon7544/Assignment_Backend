@@ -1,0 +1,25 @@
+﻿# .NET build output
+**/bin/
+**/obj/
+
+# Test output
+TestResults/
+coverage/
+
+# Local environment / secrets
+.env
+.env.*
+!.env.example
+
+# Generated repository snapshots
+repomix-output*.md
+
+# User-specific IDE files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# OS files
+.DS_Store
+Thumbs.db
