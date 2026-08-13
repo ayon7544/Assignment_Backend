@@ -90,20 +90,12 @@ builder.Services.AddCors(options =>
                 .AllowAnyMethod()
                 .AllowCredentials();
         }
-        else if (builder.Environment.IsDevelopment())
+        else
         {
-            // Safe fallback for local development only.
             policy
                 .AllowAnyOrigin()
                 .AllowAnyHeader()
                 .AllowAnyMethod();
-        }
-        else
-        {
-            // Production must explicitly configure AllowedOrigins.
-            throw new InvalidOperationException(
-                "AllowedOrigins must be configured in Production."
-            );
         }
     });
 });
@@ -154,14 +146,17 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
+// Run migrations and seed data on every startup
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var db = scope.ServiceProvider
+        .GetRequiredService<ApplicationDbContext>();
+
     await db.Database.MigrateAsync();
     await DatabaseSeeder.SeedAsync(db);
 }
 
-// Swagger is enabled in all environments so evaluators can test the API.
+// Swagger available in all environments
 app.UseSwagger();
 app.UseSwaggerUI(options =>
     options.SwaggerEndpoint(
